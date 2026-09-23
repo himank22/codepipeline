@@ -1,0 +1,6 @@
+[
+  {
+    "name": "Main",
+    "imageUri": "YOUR_ECR_URI:latest"
+  }
+]
