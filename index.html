@@ -1,0 +1,315 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Catch The Circle</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 25px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card h3 {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        #startBtn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #22c55e;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+
+        #startBtn:hover {
+            transform: scale(1.05);
+            background: #16a34a;
+        }
+
+        #gameArea {
+            height: 450px;
+            background: #020617;
+            border: 2px solid #334155;
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #circle {
+            width: 50px;
+            height: 50px;
+            background: #ef4444;
+            border-radius: 50%;
+            position: absolute;
+            display: none;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.7);
+            transition: transform 0.1s;
+        }
+
+        #circle:hover {
+            transform: scale(1.15);
+        }
+
+        .message {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748b;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .game-over {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            #gameArea {
+                height: 350px;
+            }
+
+            .score-board {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <h1>🎯 Catch The Circle</h1>
+
+        <p class="subtitle">
+            Click the red circle as many times as you can!
+        </p>
+
+        <div class="score-board">
+
+            <div class="card">
+                <h3>SCORE</h3>
+                <p id="score">0</p>
+            </div>
+
+            <div class="card">
+                <h3>TIME</h3>
+                <p><span id="time">30</span>s</p>
+            </div>
+
+            <div class="card">
+                <h3>HIGH SCORE</h3>
+                <p id="highScore">0</p>
+            </div>
+
+        </div>
+
+        <button id="startBtn">
+            Start Game 🚀
+        </button>
+
+        <div id="gameArea">
+
+            <div class="message" id="message">
+                Press "Start Game" to begin
+            </div>
+
+            <div id="circle"></div>
+
+        </div>
+
+        <div class="game-over" id="gameOver"></div>
+
+    </div>
+
+
+    <script>
+
+        const gameArea = document.getElementById("gameArea");
+        const circle = document.getElementById("circle");
+
+        const scoreElement = document.getElementById("score");
+        const timeElement = document.getElementById("time");
+        const highScoreElement = document.getElementById("highScore");
+
+        const startBtn = document.getElementById("startBtn");
+        const message = document.getElementById("message");
+        const gameOver = document.getElementById("gameOver");
+
+        let score = 0;
+        let time = 30;
+        let gameRunning = false;
+        let timer;
+
+
+        // Load High Score
+        let highScore = localStorage.getItem("highScore") || 0;
+        highScoreElement.textContent = highScore;
+
+
+        // Start Game
+        startBtn.addEventListener("click", startGame);
+
+
+        function startGame() {
+
+            score = 0;
+            time = 30;
+            gameRunning = true;
+
+            scoreElement.textContent = score;
+            timeElement.textContent = time;
+
+            message.style.display = "none";
+            gameOver.textContent = "";
+
+            circle.style.display = "block";
+
+            startBtn.textContent = "Restart Game 🔄";
+
+            moveCircle();
+
+            clearInterval(timer);
+
+            timer = setInterval(() => {
+
+                time--;
+
+                timeElement.textContent = time;
+
+                if (time <= 0) {
+                    endGame();
+                }
+
+            }, 1000);
+        }
+
+
+        // Circle Click
+        circle.addEventListener("click", () => {
+
+            if (!gameRunning) return;
+
+            score++;
+
+            scoreElement.textContent = score;
+
+            moveCircle();
+        });
+
+
+        // Move Circle Randomly
+        function moveCircle() {
+
+            const areaWidth = gameArea.clientWidth;
+            const areaHeight = gameArea.clientHeight;
+
+            const circleSize = circle.offsetWidth;
+
+            const maxX = areaWidth - circleSize;
+            const maxY = areaHeight - circleSize;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            circle.style.left = randomX + "px";
+            circle.style.top = randomY + "px";
+        }
+
+
+        // End Game
+        function endGame() {
+
+            gameRunning = false;
+
+            clearInterval(timer);
+
+            circle.style.display = "none";
+
+            gameOver.textContent =
+                `🎮 Game Over! Your Score: ${score}`;
+
+            // Update High Score
+            if (score > highScore) {
+
+                highScore = score;
+
+                localStorage.setItem("highScore", highScore);
+
+                highScoreElement.textContent = highScore;
+
+                gameOver.textContent += " 🏆 New High Score!";
+            }
+        }
+
+    </script>
+
+</body>
+</html>
