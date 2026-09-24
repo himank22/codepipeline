@@ -1,6 +1,6 @@
 [
   {
-    "name": "YOUR_CONTAINER_NAME",
+    "name": "Main",
     "imageUri": "230235764463.dkr.ecr.us-east-1.amazonaws.com/himankrepo1:latest"
   }
 ]
