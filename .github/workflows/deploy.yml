@@ -85,7 +85,6 @@ jobs:
                     -----END RSA PRIVATE KEY-----
           port: 22
           script: |
-            sudo rm -rf /usr/share/nginx/html/*
-            sudo cp index.html /usr/share/nginx/html/index.html
+           sudo cp /tmp/index.html /usr/share/nginx/html/index.html
             sudo systemctl restart nginx
             echo "Deployment successful"
