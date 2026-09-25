@@ -56,7 +56,7 @@ jobs:
           host: 34.201.16.6
           username: ec2-user
           key:   |
-                -----BEGIN RSA PRIVATE KEY-----
+                    -----BEGIN RSA PRIVATE KEY-----
                     MIIEowIBAAKCAQEAwiWfVWvZDNiJ8R0hjUfsrHOmO9b5nvh9VzIwafrIuZ+zBzdE
                     VmaMUqv9x/iMksxlxssxwz9QaYW9z+AJReWhJOkfDYUqAhNeU0eTOjRqspEFD6Lp
                     LPV01uRzPGHiXReQGbpHk5VOakuUa/AxOavkPndMKnzn44xcOfWLM8aHgznBXbSH
@@ -86,5 +86,5 @@ jobs:
           port: 22
           script: |
            sudo cp /tmp/index.html /usr/share/nginx/html/index.html
-            sudo systemctl restart nginx
-            echo "Deployment successful"
+           sudo systemctl restart nginx
+           echo "Deployment successful"
