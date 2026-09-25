@@ -1,0 +1,88 @@
+name: Deploy Website to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy website to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 34.201.16.6
+          username: ec2-user
+          key:       -----BEGIN RSA PRIVATE KEY-----
+                    MIIEowIBAAKCAQEAwiWfVWvZDNiJ8R0hjUfsrHOmO9b5nvh9VzIwafrIuZ+zBzdE
+                    VmaMUqv9x/iMksxlxssxwz9QaYW9z+AJReWhJOkfDYUqAhNeU0eTOjRqspEFD6Lp
+                    LPV01uRzPGHiXReQGbpHk5VOakuUa/AxOavkPndMKnzn44xcOfWLM8aHgznBXbSH
+                    Tprik3g76nNoaVacgtttVhrox4ToPm42o3V5+xWIz5RTjUgURKV2jiqoUWWYrp+1
+                    ZHhGosVx2h5R7MzJPovZBx3IAURZzgbgHWz7datC+Vf8Xx4prwIvnYeOZKqTgd1g
+                    yKGN3gdojGHs5qm7Fn0HbqyaxE+oWFXQ5PpkTQIDAQABAoIBAG6fPUBQ6SWWpFKM
+                    RLfZiZNhehCSlzzrXY+3ezqHuKN7yWiNJxUL7VyVv06X4pEqgbtZwAr+InVdzR+L
+                    Cf2Xr8/2PMlZXOw92Psex1bc0wbX9shIDRCe82oWVUrMg0yDxonCSFJhOoL6eaFf
+                    BM1VkgG9u9phvUc8jLhBnoVr038DBIMb4iA5FV1G2jks6M+d906/GWfTgIYbHBCo
+                    oU1U7JzGrL4M43mN5C/+ATJdSR5zzOTt06XMiJlIOuyqmT160mrygApcOW6mG9MC
+                    7F3C53oAg8eDaVkhy2I4qXOa3n7yIdR6NwHDQG+XhTTGh7an1HGk6n2SkloRKdhL
+                    VrWLlMECgYEA8+ZrnxDw9mh/tCIEZ+DHORzjMrlTqc9enqXeOSIhTzNKKXFBbiYJ
+                    e/2U5FaZKf8cpgFWTu+jGsQGcs290KZEI8Gi/Xd8FQHPetUM2/b6oqkLcVhkJ1bD
+                    7wpBvb3+ELAy3eHBIIo/reuAT1Vbz3Zpr0WwmhRssOlYvp/QfK4ssGkCgYEAy8dT
+                    1xZqDx1vvPfWvYmRxIXb35P7t0l1e0zfVjBZdcE7UDLxxRjOwVDTYlJXwnCikXXO
+                    gO9hnIkWTqKZXZXBj9p3xoI05y0lIz8FgqhnzuoMYocHwx9IhkYeDYGPGSKhzBf/
+                    +3EHhGuDyeTo7zXRDBfsI9gOMpMbocTFOsKdGEUCgYEAzRhoS5xtZGe/a3RnjAqi
+                    vM4j55WcWuE8SeBlHFos9HLG3E6WnM9zjkZRHCoOJhiWuKnLMBmnaGyKl6OXCIuo
+                    JQFB1C7Tsr6RAFODurzXSk0oiCmyHrqBjNNtMOdBbDseqyKZyok2v0OX5B59U9nZ
+                    SUArH4YpWCMBM1skcJPulHECgYAcmmLzSusiKgCYJrWWryutyRg+vrfTV1VNNFIY
+                    9/pmo/PeYvg6sSu8SMsS/vngigzXnBCbWn56CWf/K6WZVD7yITk0vOwOEvEmjF8K
+                    ovbHPWT1o3x8b/SvHEJ1pNzgK1NIoYnF0my6spiyCxaDFSu9pdH4iggcIzf6sfL5
+                    N33zfQKBgCN18BCzX2GQp31O83JSSKrDHjO3/enNSBVm2hqokAxx2KlOYN/0GoCn
+                    oxfWHnRamMNKFJ5pbnzPwUMNFAy5P54Z1xJadbFBiMySAfDqS9KfeJb4T0lEkouO
+                    RN7eVm5X2yMDZ9GlJ+JGXLOuiAIGyQg2ylziwpfkpvqdSbGKz0zJ
+                    -----END RSA PRIVATE KEY-----
+          port: 22
+          source: "index.html"
+          target: "/tmp/"
+
+      - name: Deploy website
+        uses: appleboy/ssh-action@v1
+        with:  
+          host: 34.201.16.6
+          username: ec2-user
+          key:       -----BEGIN RSA PRIVATE KEY-----
+                    MIIEowIBAAKCAQEAwiWfVWvZDNiJ8R0hjUfsrHOmO9b5nvh9VzIwafrIuZ+zBzdE
+                    VmaMUqv9x/iMksxlxssxwz9QaYW9z+AJReWhJOkfDYUqAhNeU0eTOjRqspEFD6Lp
+                    LPV01uRzPGHiXReQGbpHk5VOakuUa/AxOavkPndMKnzn44xcOfWLM8aHgznBXbSH
+                    Tprik3g76nNoaVacgtttVhrox4ToPm42o3V5+xWIz5RTjUgURKV2jiqoUWWYrp+1
+                    ZHhGosVx2h5R7MzJPovZBx3IAURZzgbgHWz7datC+Vf8Xx4prwIvnYeOZKqTgd1g
+                    yKGN3gdojGHs5qm7Fn0HbqyaxE+oWFXQ5PpkTQIDAQABAoIBAG6fPUBQ6SWWpFKM
+                    RLfZiZNhehCSlzzrXY+3ezqHuKN7yWiNJxUL7VyVv06X4pEqgbtZwAr+InVdzR+L
+                    Cf2Xr8/2PMlZXOw92Psex1bc0wbX9shIDRCe82oWVUrMg0yDxonCSFJhOoL6eaFf
+                    BM1VkgG9u9phvUc8jLhBnoVr038DBIMb4iA5FV1G2jks6M+d906/GWfTgIYbHBCo
+                    oU1U7JzGrL4M43mN5C/+ATJdSR5zzOTt06XMiJlIOuyqmT160mrygApcOW6mG9MC
+                    7F3C53oAg8eDaVkhy2I4qXOa3n7yIdR6NwHDQG+XhTTGh7an1HGk6n2SkloRKdhL
+                    VrWLlMECgYEA8+ZrnxDw9mh/tCIEZ+DHORzjMrlTqc9enqXeOSIhTzNKKXFBbiYJ
+                    e/2U5FaZKf8cpgFWTu+jGsQGcs290KZEI8Gi/Xd8FQHPetUM2/b6oqkLcVhkJ1bD
+                    7wpBvb3+ELAy3eHBIIo/reuAT1Vbz3Zpr0WwmhRssOlYvp/QfK4ssGkCgYEAy8dT
+                    1xZqDx1vvPfWvYmRxIXb35P7t0l1e0zfVjBZdcE7UDLxxRjOwVDTYlJXwnCikXXO
+                    gO9hnIkWTqKZXZXBj9p3xoI05y0lIz8FgqhnzuoMYocHwx9IhkYeDYGPGSKhzBf/
+                    +3EHhGuDyeTo7zXRDBfsI9gOMpMbocTFOsKdGEUCgYEAzRhoS5xtZGe/a3RnjAqi
+                    vM4j55WcWuE8SeBlHFos9HLG3E6WnM9zjkZRHCoOJhiWuKnLMBmnaGyKl6OXCIuo
+                    JQFB1C7Tsr6RAFODurzXSk0oiCmyHrqBjNNtMOdBbDseqyKZyok2v0OX5B59U9nZ
+                    SUArH4YpWCMBM1skcJPulHECgYAcmmLzSusiKgCYJrWWryutyRg+vrfTV1VNNFIY
+                    9/pmo/PeYvg6sSu8SMsS/vngigzXnBCbWn56CWf/K6WZVD7yITk0vOwOEvEmjF8K
+                    ovbHPWT1o3x8b/SvHEJ1pNzgK1NIoYnF0my6spiyCxaDFSu9pdH4iggcIzf6sfL5
+                    N33zfQKBgCN18BCzX2GQp31O83JSSKrDHjO3/enNSBVm2hqokAxx2KlOYN/0GoCn
+                    oxfWHnRamMNKFJ5pbnzPwUMNFAy5P54Z1xJadbFBiMySAfDqS9KfeJb4T0lEkouO
+                    RN7eVm5X2yMDZ9GlJ+JGXLOuiAIGyQg2ylziwpfkpvqdSbGKz0zJ
+                    -----END RSA PRIVATE KEY-----
+          port: 22
+          script: |
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp index.html /usr/share/nginx/html/index.html
+            sudo systemctl restart nginx
